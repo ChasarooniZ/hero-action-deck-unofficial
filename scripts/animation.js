@@ -4,6 +4,7 @@ import {
   BACK_SHOW_DURATION,
   PLAY_CARD_DURATION,
   FRONT_DURATION_PER_CARD,
+  SFX,
 } from "./const.js";
 
 export function drawCardsAnimation(hand) {
@@ -69,6 +70,21 @@ export function playCardAnimation(card) {
       ease: "easeInQuart",
     })
     .fadeOut(1000, { ease: "easeOutCubic" })
+    .sound()
+    .file(Sequencer.Helpers.random_object_element(SFX.TAKE))
+    .volume(game.settings.get(MODULE_ID, "animations.volume"))
+    .sound()
+    .file(Sequencer.Helpers.random_object_element(SFX.PLAY))
+    .volume(game.settings.get(MODULE_ID, "animations.volume"))
+    .delay(1000)
+    .play({ preload: true });
+}
+
+export function discardCardSFX() {
+  new Sequence()
+    .sound()
+    .file(Sequencer.Helpers.random_object_element(SFX.DISCARD))
+    .volume(game.settings.get(MODULE_ID, "animations.volume"))
     .play({ preload: true });
 }
 
@@ -105,6 +121,10 @@ function addCardAnim(seq, front, back, cnt, amt, hpDockPos) {
       fromEnd: true,
       ease: "easeInCubic",
     })
+    .sound()
+    .delay(d)
+    .file(Sequencer.Helpers.random_object_element(SFX.TAKE))
+    .volume(game.settings.get(MODULE_ID, "animations.volume"))
     .effect()
     .delay(BACK_SHOW_DURATION + d)
     .file(front)
@@ -149,7 +169,11 @@ function addCardAnim(seq, front, back, cnt, amt, hpDockPos) {
       duration: 1000,
       delay: frontDuration - 1000,
       ease: "easeOutQuart",
-    });
+    })
+    .sound()
+    .delay(BACK_SHOW_DURATION + frontDuration - 1000)
+    .file(Sequencer.Helpers.random_object_element(SFX.PLACE))
+    .volume(game.settings.get(MODULE_ID, "animations.volume"));
 }
 
 function getHeroActionDockPosition() {

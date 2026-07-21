@@ -1,4 +1,8 @@
-import { drawCardsAnimation, playCardAnimation } from "./animation.js";
+import {
+  discardCardSFX,
+  drawCardsAnimation,
+  playCardAnimation,
+} from "./animation.js";
 import { HERO_ACTION_DECK_UUID } from "./const.js";
 import { MODULE_ID } from "./const.js";
 export async function getHandCardInfo() {
@@ -84,8 +88,10 @@ export async function playCard(card) {
 
 export async function discardCard(card) {
   const discard = getDiscard();
+  if (game.settings.get(MODULE_ID, "animations.enabled")) {
+    discardCardSFX();
+  }
   card.discard(discard, { chatNotification: true });
-  console.log("Discard", card);
 }
 
 export function getHand() {

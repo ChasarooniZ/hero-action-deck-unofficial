@@ -41,8 +41,17 @@ export function registerSettings() {
     name: `${MODULE_ID}.module-settings.animations.enabled.name`,
     hint: `${MODULE_ID}.module-settings.animations.enabled.hint`,
     scope: "world",
-    config: true,
+    config: game.modules.get("sequencer")?.active,
     type: Boolean,
     default: game.modules.get("sequencer")?.active,
+  });
+
+  game.settings.register(MODULE_ID, "animations.volume", {
+    name: `${MODULE_ID}.module-settings.animations.volume.name`,
+    hint: `${MODULE_ID}.module-settings.animations.volume.hint`,
+    scope: "world",
+    config: game.modules.get("sequencer")?.active,
+    type: Number,
+    default: 0.5,
   });
 }
