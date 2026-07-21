@@ -1,0 +1,15 @@
+aside#hero-action-hand {
+  div.hero-action-container {
+    pointer-events: all;
+    width: 200px;
+    background: #0b0a13bf;
+    border: 1px solid #302831;
+    border-radius: 8px;
+    padding: 6px 8px;
+    gap: 0.5em;
+
+    img.hero-action-card {
+      cursor: pointer;
+    }
+  }
+}

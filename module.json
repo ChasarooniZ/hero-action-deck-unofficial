@@ -5,33 +5,18 @@
   "version": "#{VERSION}#",
   "library": "false",
   "compatibility": {
-    "minimum": 13,
-    "verified": 13
+    "minimum": 14,
+    "verified": 14
   },
   "authors": [
     {
-      "name": "chasarooniZ",
-      "url": "https://github.com/League-of-Foundry-Developers",
-      "discord": "discordID#0001"
+      "name": "chasarooniZ"
     }
   ],
   "relationships": {
-    "systems": [],
+    "systems": [{ "id": "pf2e" }],
     "requires": [],
-    "recommends": [
-      {
-        "id": "card-hands-list",
-        "type": "module",
-        "reason": "Easier to see the hands.",
-        "compatibility": {}
-      },
-      {
-        "id": "orcnog-card-viewer",
-        "type": "module",
-        "reason": "Make cards very pretty looking.",
-        "compatibility": {}
-      }
-    ]
+    "recommends": []
   },
   "esmodules": ["scripts/module.js"],
   "scripts": ["scripts/lib/lib.js"],
