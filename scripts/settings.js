@@ -1,9 +1,9 @@
-import { MODULE_ID } from "./module.js";
+import { MODULE_ID } from "./const.js";
 
 export function registerSettings() {
-  game.settings.register(MODULE_ID, "deck.id.hero-action", {
-    name: `${MODULE_ID}.module-settings.deck.id.hero-action.name`,
-    hint: `${MODULE_ID}.module-settings.deck.id.hero-action.hint`,
+  game.settings.register(MODULE_ID, "deck.id.hero-actions", {
+    name: `${MODULE_ID}.module-settings.deck.id.hero-actions.name`,
+    hint: `${MODULE_ID}.module-settings.deck.id.hero-actions.hint`,
     scope: "world",
     config: true,
     type: String,
@@ -35,5 +35,14 @@ export function registerSettings() {
     config: true,
     type: Number,
     default: 3,
+  });
+
+  game.settings.register(MODULE_ID, "animations.enabled", {
+    name: `${MODULE_ID}.module-settings.animations.enabled.name`,
+    hint: `${MODULE_ID}.module-settings.animations.enabled.hint`,
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: game.modules.get("sequencer")?.active,
   });
 }

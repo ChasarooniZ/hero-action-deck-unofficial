@@ -1,3 +1,4 @@
+import { MODULE_ID } from "./const.js";
 import {
   createHeroActionDeck,
   createHeroActionDiscard,
@@ -5,8 +6,6 @@ import {
 } from "./helpers.js";
 import { registerSettings } from "./settings.js";
 import { setupHeroActionHUD } from "./ui.js";
-
-export const MODULE_ID = "pf2e-hero-deck-unnofficial";
 
 Hooks.once("init", async function () {
   registerSettings();
@@ -24,11 +23,11 @@ Hooks.once("ready", async function () {
   }
   Hooks.on("passCards", async (deckA, deckB) => {
     if (
-      [deckA.id, deckB.id].includes(
+      [deckA._id, deckB._id].includes(
         game.settings.get(MODULE_ID, "deck.id.hand"),
       )
     ) {
-      setupHeroActionHUD();
+      setTimeout(setupHeroActionHUD, 500);
     }
   });
   setupHeroActionHUD();

@@ -1,7 +1,6 @@
-import { MODULE_ID } from "./module.js";
-const HERO_ACTION_DECK_UUID =
-  "Compendium.pf2e-hero-deck-unofficial.pf2e-hero-action-card-deck-unofficial.Cards.Q1sFpa5AmQOCmqf2";
-
+import { drawCardsAnimation, playCardAnimation } from "./animation.js";
+import { HERO_ACTION_DECK_UUID } from "./const.js";
+import { MODULE_ID } from "./const.js";
 export async function getHandCardInfo() {
   const hand = getHand();
   const relevantData = hand.cards.contents.map((card) => ({
@@ -31,7 +30,13 @@ export async function createHeroActionDeck() {
 }
 
 export async function createHeroActionHand() {
-  const deck = await Cards.create({ name: "Hero Actions: Hand", type: "hand" });
+  const deck = await Cards.create({
+    name: "Hero Actions: Hand",
+    type: "hand",
+    ownership: {
+      default: 3,
+    },
+  });
   await game.settings.set(MODULE_ID, "deck.id.hand", deck.id);
 }
 
@@ -39,31 +44,48 @@ export async function createHeroActionDiscard() {
   const deck = await Cards.create({
     name: "Hero Actions: Discard",
     type: "pile",
+    ownership: {
+      default: 3,
+    },
   });
   await game.settings.set(MODULE_ID, "deck.id.discard", deck.id);
 }
 
-export function draw(count) {
+export function fillUpHand() {
+  const hand = getHand();
+  const deck = getDeck();
+  const max = game.settings.get(MODULE_ID, "hero-actions.max");
+  const count = max - hand.cards.size;
+
+  if (count > 0) {
+    drawCard(count, { heroActionDeck: hand, heroActionSource: deck });
+  }
+}
+
+export async function drawCard(count) {
   const deck = getDeck();
   const hand = getHand();
-  const res = hand.draw(deck, count, {
+  const cards = await hand.draw(deck, count, {
     how: CONST.CARD_DRAW_MODES.RANDOM,
     chatNotification: true,
   });
-  console.log("Draw", res);
+  if (game.settings.get(MODULE_ID, "animations.enabled")) {
+    drawCardsAnimation(cards);
+  }
 }
 
-export function play(card) {
+export async function playCard(card) {
   const discard = getDiscard();
-  game.modules
-    .get("orcnog-card-viewer")
-    .api.view(heroActionDeck.name, card.id, false);
+  if (game.settings.get(MODULE_ID, "animations.enabled")) {
+    playCardAnimation(card);
+  }
   card.play(discard, { chatNotification: true });
 }
 
-export function discard(card) {
+export async function discardCard(card) {
   const discard = getDiscard();
   card.discard(discard, { chatNotification: true });
+  console.log("Discard", card);
 }
 
 export function getHand() {

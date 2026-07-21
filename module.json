@@ -16,7 +16,11 @@
   "relationships": {
     "systems": [{ "id": "pf2e" }],
     "requires": [],
-    "recommends": []
+    "recommends": [
+      {
+        "id": "sequencer"
+      }
+    ]
   },
   "esmodules": ["scripts/module.js"],
   "scripts": ["scripts/lib/lib.js"],

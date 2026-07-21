@@ -1,8 +1,18 @@
-import { discard, getDeck, getDiscard, getHand, play } from "./helpers";
+import {
+  discardCard,
+  fillUpHand,
+  getHand,
+  getHandCardInfo,
+  playCard,
+} from "./helpers.js";
+import { EMPTY_IMG, MODULE_ID } from "./const.js";
+
+const PX_PER_CARD = 60;
 
 export async function setupHeroActionHUD() {
-  const handInfo = getHandCardInfo();
+  const handInfo = await getHandCardInfo();
   const content = getHandHTML(handInfo);
+  const max = game.settings.get(MODULE_ID, "hero-actions.max");
 
   const existingElement = document.querySelector("aside#hero-action-hand");
   if (existingElement) {
@@ -13,16 +23,10 @@ export async function setupHeroActionHUD() {
   playerlist.insertAdjacentHTML(
     "afterend",
     `<aside id="hero-action-hand" class="plain">
-    <div class="hero-action-container">
+    <div class="hero-action-container" style="--hero-action-container-width: ${max * PX_PER_CARD}px">
         <div  class="flexrow">
         ${content}
     </div>
-    <footer class="form-footer" data-application-part="footer">
-        <button type="button" class="" data-action="draw">
-            <i class="fa-solid fa-plus" inert=""></i>
-            <span>Re Draw</span>
-        </button>
-    </footer>
 </div>
 </aside>`,
   );
@@ -31,37 +35,48 @@ export async function setupHeroActionHUD() {
     .querySelectorAll("aside#hero-action-hand img.hero-action-card")
     .forEach((cardHTML) => {
       cardHTML.addEventListener("click", (e) => {
-        const id = e.target.id;
-        cardAction(id);
+        const id = e?.target?.id;
+        if (id) {
+          cardAction(id);
+        } else {
+          fillUpHand();
+        }
       });
-    });
-
-  document
-    .querySelector("aside#hero-action-hand button[data-action='draw']")
-    .addEventListener("click", (e) => {
-      const hand = getHand();
-      const deck = getDeck();
-      const max = game.settings.get(MODULE_ID, "hero-actions.max");
-      const count = max - hand.cards.size;
-
-      if (count > 0) {
-        draw(count, { heroActionDeck: hand, heroActionSource: deck });
-      }
     });
 }
 
 function getHandHTML(handData) {
-  return handData
+  const max = game.settings.get(MODULE_ID, "hero-actions.max");
+  const empty = max - handData?.length;
+
+  const cardData = handData;
+  for (let i = 0; i < empty; i++) {
+    cardData.push({
+      img: EMPTY_IMG,
+      name: "Draw Remaining Hero Action Cards?",
+      description: "Click Me to draw the remaining hero action cards",
+      id: "",
+    });
+  }
+  return cardData
     .map(
       (card) =>
-        `<div><img src="${card.img}" width=50 data-tooltip="<p><b>${card.name}</b></p>${card.description}" data-tooltip-direction="UP" id="${card.id}" class="hero-action-card"></div>`,
+        `<div><img src="${card.img}" width=50 data-tooltip="
+      <p><b>${card.name}</b></p>
+      ${card.description}
+      <hr>
+      <b>${card.id ? "Open Menu" : "Draw Remaining Cards"}</b> <span
+                        class='reference'>
+        ${game.i18n.localize("CONTROLS.LeftClick")}
+    </span>
+      "
+      data-tooltip-direction="UP" id="${card.id}" class="hero-action-card"></div>`,
     )
     .join("");
 }
 
 function cardAction(cardID) {
   const hand = getHand();
-  const discard = getDiscard();
 
   const card = hand.cards.get(cardID);
 
@@ -96,9 +111,9 @@ function cardAction(cardID) {
     submit: (result) => {
       console.log({ result });
       if (result === "play") {
-        play(card);
+        playCard(card);
       } else if (result === "discard") {
-        discard(card);
+        discardCard(card);
       }
     },
   }).render({ force: true });
