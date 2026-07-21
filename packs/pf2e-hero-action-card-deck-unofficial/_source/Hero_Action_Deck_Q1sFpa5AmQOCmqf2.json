@@ -543,7 +543,7 @@
       "value": null,
       "back": {
         "text": "",
-        "img": null,
+        "img": "modules/pf2e-hero-deck-unofficial/assets/card_back.webp",
         "name": ""
       },
       "drawn": false,

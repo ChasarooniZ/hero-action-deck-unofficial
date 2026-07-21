@@ -1,4 +1,10 @@
-import { DELAY_PER_CARD, CARD_SCALE, BACK_SHOW_DURATION } from "./const.js";
+import {
+  DELAY_PER_CARD,
+  CARD_SCALE,
+  BACK_SHOW_DURATION,
+  PLAY_CARD_DURATION,
+  FRONT_DURATION_PER_CARD,
+} from "./const.js";
 
 export function drawCardsAnimation(hand) {
   const cards = hand.map((card) => ({
@@ -73,7 +79,7 @@ function addCardAnim(seq, front, back, cnt, amt, hpDockPos) {
     y: hpDockPos.y / window.innerHeight - pos.y,
   };
   const d = DELAY_PER_CARD * (cnt + 1);
-  const frontDuration = 3000 * amt;
+  const frontDuration = FRONT_DURATION_PER_CARD * amt;
 
   return seq
     .effect()

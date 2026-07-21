@@ -12,13 +12,22 @@ Hooks.once("init", async function () {
 });
 
 Hooks.once("ready", async function () {
-  if (!game.settings.get(MODULE_ID, "deck.id.hero-actions")) {
+  if (
+    !game.settings.get(MODULE_ID, "deck.id.hero-actions") ||
+    !game.cards.get(game.settings.get(MODULE_ID, "deck.id.hero-actions"))
+  ) {
     await createHeroActionDeck();
   }
-  if (!game.settings.get(MODULE_ID, "deck.id.hand")) {
+  if (
+    !game.settings.get(MODULE_ID, "deck.id.hand") ||
+    !game.cards.get(game.settings.get(MODULE_ID, "deck.id.hand"))
+  ) {
     await createHeroActionHand();
   }
-  if (!game.settings.get(MODULE_ID, "deck.id.discard")) {
+  if (
+    !game.settings.get(MODULE_ID, "deck.id.discard") ||
+    !game.cards.get(game.settings.get(MODULE_ID, "deck.id.discard"))
+  ) {
     await createHeroActionDiscard();
   }
   Hooks.on("passCards", async (deckA, deckB) => {
