@@ -1,3 +1,11 @@
+## Unreleased
+
+- **New**
+  - Dropped any module requirements
+  - Added UI component that appears when loading by default
+  - Added better scripts to properly pack the DB
+  - Added Settings to configure what deck is the `Hero Action Deck` as well as added defaults for that
+
 ## 0.1.1
 
 - **Fixes**
