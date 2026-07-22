@@ -1,4 +1,5 @@
 import { MODULE_ID } from "./const.js";
+import { setupHeroActionHUD } from "./ui.js";
 
 export function registerSettings() {
   game.settings.register(MODULE_ID, "deck.id.hero-actions", {
@@ -35,6 +36,9 @@ export function registerSettings() {
     config: true,
     type: Number,
     default: 3,
+    onChange: async (value) => {
+      setupHeroActionHUD();
+    },
   });
 
   game.settings.register(MODULE_ID, "messages.enable", {

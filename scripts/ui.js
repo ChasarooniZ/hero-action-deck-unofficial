@@ -2,6 +2,7 @@ import {
   discardCard,
   fillUpHand,
   getActor,
+  getEnrichedCardData,
   getHand,
   getHandCardInfo,
   playCard,
@@ -78,10 +79,12 @@ function getHandHTML(handData) {
     .join("");
 }
 
-function cardAction(cardID) {
+async function cardAction(cardID) {
   const hand = getHand();
 
   const card = hand.cards.get(cardID);
+
+  const [cardData] = await getEnrichedCardData([card]);
 
   const actor = getActor();
 
@@ -98,7 +101,7 @@ function cardAction(cardID) {
       ),
       icon: "fa-solid fa-circle-h",
     },
-    content: `<i>${actor?.system?.resources?.heroPoints?.value === 0 ? game.i18n.format("pf2e-hero-deck-unofficial.ui.hero-action-dialogue.warning", { name: actor?.name }) : ""}</i><img src="${card?.faces?.[0]?.img}" height=500 alt="${card.name}" />`,
+    content: `<i>${actor?.system?.resources?.heroPoints?.value === 0 ? game.i18n.format("pf2e-hero-deck-unofficial.ui.hero-action-dialogue.warning", { name: actor?.name }) : ""}</i><img src="${card?.faces?.[0]?.img}" height=500 alt="${card.name}" data-tooltip="${cardData?.description}" />`,
     buttons: [
       {
         action: "play",

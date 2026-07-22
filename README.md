@@ -4,14 +4,18 @@
 
 <!--- Forge Bazaar Install % Badge -->
 <!--- replace <your-module-name> with the `name` in your manifest -->
-<!--- ![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2F<your-module-name>&colorB=4aa94a) -->
-<!--- [![](https://img.shields.io/badge/ko--fi-donate-%23FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/<Kofi Username>)-->
+
+![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fhero-action-deck-unnofficial&colorB=4aa94a)
+[![](https://img.shields.io/badge/ko--fi-donate-%23FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/ChasarooniZ)
 
 # PF2e Hero Action Deck (Unofficial)
 
 Unofficial Implementation of Pf2e Hero Action Cards as a Deck for fvtt
 
 https://github.com/user-attachments/assets/778c3fbf-6c32-4f54-bb25-ab1e3ca1c0ae
+
+
+Adds both a new Mini UI and some minor functionality as well as the cards. Also includes optional animations and sounds that can play based on what a player does to an individual `Hero Action`.
 
 ## Table of Contents
 

@@ -1,10 +1,16 @@
 ## Unreleased
 
+## 1.0.0
+
 - **New**
+  - Finally included code functionality to this module:
+  - **Current Use Case**
+    - Party Hero Action pool (the party shares a set amount of Hero Actions)
+  - The module uses a UI in the bottom left below the **Players List** to allow players to easily see all shared cards and interact with them
+  - Also includes optional animations and sounds that can play based on what a player does to an individual `Hero Action`
+  - This module also handles sending simple messages to indicate actions taken
+- **Updated**
   - Changed module requirements to `Sequencer`
-  - Added UI component that appears when loading by default
-  - Added better scripts to properly pack the DB
-  - Added Settings to configure what deck is the `Hero Action Deck` as well as added defaults for that
 
 ## 0.1.1
 

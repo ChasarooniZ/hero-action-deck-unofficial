@@ -14,11 +14,26 @@
     }
   ],
   "relationships": {
-    "systems": [{ "id": "pf2e" }],
+    "systems": [
+      {
+        "id": "pf2e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "7.11.0",
+          "verified": "7.11.0"
+        }
+      }
+    ],
     "requires": [],
     "recommends": [
       {
-        "id": "sequencer"
+        "id": "sequencer",
+        "type": "module",
+        "manifest": "https://github.com/fantasycalendar/FoundryVTT-Sequencer/releases/latest/download/module.json",
+        "compatibility": {
+          "minimum": "4.0.2",
+          "verified": "4.0.2"
+        }
       }
     ]
   },
