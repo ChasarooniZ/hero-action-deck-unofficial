@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 1.0.2
+
+- Fixed missing Assets from previous release (🐛 @Nythz)
+
 ## 1.0.1
 
 - Fixed release

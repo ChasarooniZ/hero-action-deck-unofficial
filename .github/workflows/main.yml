@@ -69,7 +69,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
-
       # Extract version embedded in the tag.
       # This step expects the tag to be one of the following formats:
       #   - "v<major>.<minor>.<patch>" (e.g., "v1.2.3")
@@ -121,6 +120,7 @@ jobs:
             LICENSE                              \
             CHANGELOG.md                         \
             templates                            \
+            assets/                              \
             scripts/                             \
             styles/                              \
             packs/                               \
