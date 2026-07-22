@@ -13,8 +13,6 @@ Unofficial Implementation of Pf2e Hero Action Cards as a Deck for fvtt
 
 https://github.com/user-attachments/assets/778c3fbf-6c32-4f54-bb25-ab1e3ca1c0ae
 
-
-
 ## Table of Contents
 
 - [Changelog](#changelog)
@@ -40,6 +38,11 @@ Each is under their respective license (I assembled the card BG and card art tog
   - [Free 50 Aeromancer Skills by Free Game Assets (GUI, Sprite, Tilesets)](https://free-game-assets.itch.io/free-50-rpg-aeromancer-skill-icons)
   - [Free Paladin Skills by Free Game Assets (GUI, Sprite, Tilesets)](https://free-game-assets.itch.io/free-paladin-skill-icon-pack)
   - [Free Pirate Skill 512x512 Icons by Free Game Assets (GUI, Sprite, Tilesets)](https://free-game-assets.itch.io/free-rpg-pirate-skill-icons)
+- SFX
+  - Licensed from **Ovani SFX** <https://ovanisound.com/policies/terms-of-service>
+
+> [!important]
+> These sounds may only be distributed as part of thismodule. Sharing and usage of the files outside of the this module is STRICTLY PROHIBITED. Please ensure you only access content in accordance to their licensing as listed above the disclaimer.
 
 ## Changelog
 

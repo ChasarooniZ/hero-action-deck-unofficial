@@ -1,3 +1,81 @@
 {
-    "MODULE.hello": "hello"
+  "pf2e-hero-deck-unofficial": {
+    "game-settings": {
+      "hero-actions": {
+        "max": {
+          "name": "Max Hero Actions",
+          "hint": "Set a cap on Hero Actions the party can have in their hand"
+        }
+      },
+      "deck": {
+        "id": {
+          "hand": {
+            "name": "Hand - Card Stack ID",
+            "hint": "The ID of the card stack that represents the party's Hero Point hand"
+          },
+          "discard": {
+            "name": "Discard - Card Stack ID",
+            "hint": "The ID of the card stack that represents the party's Hero Point Discard Pile"
+          },
+          "hero-actions": {
+            "name": "Hero Action - Card Stack ID",
+            "hint": "The ID of the card stack that represents the party's Hero Action Draw Pile"
+          }
+        }
+      },
+      "animations": {
+        "enabled": {
+          "name": "Enable Animations",
+          "hint": "Enables animation of cards on draw, play, and discard"
+        },
+        "volume": {
+          "name": "Animation Volume",
+          "hint": " Set the volume of all animations"
+        }
+      },
+      "messages": {
+        "enable": {
+          "name": "Message on Hero Point Actions",
+          "hint": "Create a messages whenever someone Plays, Draws, or Discards a Hero Action"
+        }
+      }
+    },
+    "ui": {
+      "hero-action-dialogue": {
+        "title": "Hero Point Card Actions - ({hpText})",
+        "warning": "<b>Note:</b> {name} has no Hero Points",
+        "buttons": {
+          "play": "Play Card",
+          "discard": "Discard Card"
+        }
+      },
+      "hero-action-hud": {
+        "empty": {
+          "name": "Draw Remaining Hero Action Cards?",
+          "description": "Click Me to draw the remaining hero action cards"
+        },
+        "card-menu": {
+          "open-menu": "Open Menu",
+          "draw-remaining": "Draw Remaining Cards"
+        }
+      }
+    },
+    "message": {
+      "title": {
+        "draw": "Draw Hero Action{s}",
+        "discard": "Discard Hero Action",
+        "play": "Play Hero Action"
+      },
+      "body": {
+        "draw": "{name} drew {cards}",
+        "discard": "{name} discarded {card}",
+        "play": "{name} spent a hero point to play {card}{cardData}"
+      }
+    },
+    "notifications": {
+      "warning": {
+        "not-enough-hp": "FYI your character {name} doesn't have enough Hero Points to use this action"
+      }
+    }
+  }
 }

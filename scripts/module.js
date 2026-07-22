@@ -30,11 +30,12 @@ Hooks.once("ready", async function () {
   ) {
     await createHeroActionDiscard();
   }
-  Hooks.on("passCards", async (deckA, deckB) => {
+  Hooks.on("createCard", async (card) => {
     if (
-      [deckA._id, deckB._id].includes(
+      [
         game.settings.get(MODULE_ID, "deck.id.hand"),
-      )
+        game.settings.get(MODULE_ID, "deck.id.discard"),
+      ]?.includes(card?.parent?.id)
     ) {
       setTimeout(setupHeroActionHUD, 500);
     }

@@ -1,13 +1,12 @@
 import {
   discardCard,
   fillUpHand,
+  getActor,
   getHand,
   getHandCardInfo,
   playCard,
 } from "./helpers.js";
-import { EMPTY_IMG, MODULE_ID } from "./const.js";
-
-const PX_PER_CARD = 60;
+import { EMPTY_IMG, MODULE_ID, PX_PER_CARD } from "./const.js";
 
 export async function setupHeroActionHUD() {
   const handInfo = await getHandCardInfo();
@@ -53,8 +52,12 @@ function getHandHTML(handData) {
   for (let i = 0; i < empty; i++) {
     cardData.push({
       img: EMPTY_IMG,
-      name: "Draw Remaining Hero Action Cards?",
-      description: "Click Me to draw the remaining hero action cards",
+      name: game.i18n.format(
+        "pf2e-hero-deck-unofficial.ui.hero-action-hud.empty.name",
+      ),
+      description: game.i18n.format(
+        "pf2e-hero-deck-unofficial.ui.hero-action-hud.empty.description",
+      ),
       id: "",
     });
   }
@@ -65,7 +68,7 @@ function getHandHTML(handData) {
       <p><b>${card.name}</b></p>
       ${card.description}
       <hr>
-      <b>${card.id ? "Open Menu" : "Draw Remaining Cards"}</b> <span
+      <b>${card.id ? game.i18n.localize("pf2e-hero-deck-unofficial.ui.hero-action-hud.card-menu.open-menu") : game.i18n.localize("pf2e-hero-deck-unofficial.ui.hero-action-hud.card-menu.draw-remaining")}</b> <span
                         class='reference'>
         ${game.i18n.localize("CONTROLS.LeftClick")}
     </span>
@@ -80,7 +83,7 @@ function cardAction(cardID) {
 
   const card = hand.cards.get(cardID);
 
-  const actor = game.user?.character ?? canvas.tokens.controlled?.[0]?.actor;
+  const actor = getActor();
 
   const hpVal = actor?.system?.resources?.heroPoints?.value ?? 0;
   const hpMax = actor?.system?.resources?.heroPoints?.max ?? 0;
@@ -88,17 +91,24 @@ function cardAction(cardID) {
   const hpText = getHeroPointArt(hpVal, hpMax);
 
   new foundry.applications.api.DialogV2({
-    window: { title: `Hero Point Card - (${hpText} HP)` },
-    content: `<img src="${card?.faces?.[0]?.img}" height=500 alt="${card.name}" />`,
+    window: {
+      title: game.i18n.format(
+        "pf2e-hero-deck-unofficial.ui.hero-action-dialogue.title",
+        { hpText },
+      ),
+      icon: "fa-solid fa-circle-h",
+    },
+    content: `<i>${actor?.system?.resources?.heroPoints?.value === 0 ? game.i18n.format("pf2e-hero-deck-unofficial.ui.hero-action-dialogue.warning", { name: actor?.name }) : ""}</i><img src="${card?.faces?.[0]?.img}" height=500 alt="${card.name}" />`,
     buttons: [
       {
         action: "play",
-        label: "Play Card",
+        label: "pf2e-hero-deck-unofficial.ui.hero-action-dialogue.buttons.play",
         icon: "fa-solid fa-cards",
       },
       {
         action: "discard",
-        label: "Discard Card",
+        label:
+          "pf2e-hero-deck-unofficial.ui.hero-action-dialogue.buttons.discard",
         icon: "fa-duotone fa-solid fa-cards-blank",
       },
       {

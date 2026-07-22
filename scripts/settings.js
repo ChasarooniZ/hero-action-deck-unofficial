@@ -37,6 +37,15 @@ export function registerSettings() {
     default: 3,
   });
 
+  game.settings.register(MODULE_ID, "messages.enable", {
+    name: `${MODULE_ID}.module-settings.messages.enable.name`,
+    hint: `${MODULE_ID}.module-settings.messages.enable.hint`,
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
   game.settings.register(MODULE_ID, "animations.enabled", {
     name: `${MODULE_ID}.module-settings.animations.enabled.name`,
     hint: `${MODULE_ID}.module-settings.animations.enabled.hint`,

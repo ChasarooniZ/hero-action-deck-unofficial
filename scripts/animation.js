@@ -5,6 +5,7 @@ import {
   PLAY_CARD_DURATION,
   FRONT_DURATION_PER_CARD,
   SFX,
+  MODULE_ID,
 } from "./const.js";
 
 export function drawCardsAnimation(hand) {
@@ -72,10 +73,10 @@ export function playCardAnimation(card) {
     .fadeOut(1000, { ease: "easeOutCubic" })
     .sound()
     .file(Sequencer.Helpers.random_object_element(SFX.TAKE))
-    .volume(game.settings.get(MODULE_ID, "animations.volume"))
+    .volume(getVolume())
     .sound()
     .file(Sequencer.Helpers.random_object_element(SFX.PLAY))
-    .volume(game.settings.get(MODULE_ID, "animations.volume"))
+    .volume(getVolume())
     .delay(1000)
     .play({ preload: true });
 }
@@ -84,7 +85,7 @@ export function discardCardSFX() {
   new Sequence()
     .sound()
     .file(Sequencer.Helpers.random_object_element(SFX.DISCARD))
-    .volume(game.settings.get(MODULE_ID, "animations.volume"))
+    .volume(getVolume())
     .play({ preload: true });
 }
 
@@ -124,7 +125,11 @@ function addCardAnim(seq, front, back, cnt, amt, hpDockPos) {
     .sound()
     .delay(d)
     .file(Sequencer.Helpers.random_object_element(SFX.TAKE))
-    .volume(game.settings.get(MODULE_ID, "animations.volume"))
+    .volume(getVolume())
+    .sound()
+    .delay(BACK_SHOW_DURATION + d)
+    .file(Sequencer.Helpers.random_object_element(SFX.TAKE))
+    .volume(getVolume())
     .effect()
     .delay(BACK_SHOW_DURATION + d)
     .file(front)
@@ -171,9 +176,9 @@ function addCardAnim(seq, front, back, cnt, amt, hpDockPos) {
       ease: "easeOutQuart",
     })
     .sound()
-    .delay(BACK_SHOW_DURATION + frontDuration - 1000)
+    .delay(BACK_SHOW_DURATION + d + frontDuration - 1000)
     .file(Sequencer.Helpers.random_object_element(SFX.PLACE))
-    .volume(game.settings.get(MODULE_ID, "animations.volume"));
+    .volume(getVolume());
 }
 
 function getHeroActionDockPosition() {
@@ -185,4 +190,8 @@ function getHeroActionDockPosition() {
     x: hpDockRect.left + hpDockRect.width / 2,
     y: hpDockRect.top + hpDockRect.height / 2,
   };
+}
+
+function getVolume() {
+  return game.settings.get(MODULE_ID, "animations.volume");
 }
