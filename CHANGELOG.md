@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 1.0.1
+
+- Fixed release
+
 ## 1.0.0
 
 - **New**
