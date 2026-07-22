@@ -1,14 +1,14 @@
-2026/07/21-16:19:42.343 8ac4 Recovering log #9
-2026/07/21-16:19:42.460 8ac4 Delete type=0 #9
-2026/07/21-16:19:42.460 8ac4 Delete type=3 #7
-2026/07/21-16:19:42.525 9d70 Level-0 table #15: started
-2026/07/21-16:19:42.572 9d70 Level-0 table #15: 24934 bytes OK
-2026/07/21-16:19:42.636 9d70 Delete type=0 #13
-2026/07/21-16:19:42.636 9d70 Manual compaction at level-0 from '!cards!Q1sFpa5AmQOCmqf2' @ 72057594037927935 : 1 .. '!cards.cards!Q1sFpa5AmQOCmqf2.zpNQzNQuu1ZecgAy' @ 0 : 0; will stop at '!cards.cards!Q1sFpa5AmQOCmqf2.zpNQzNQuu1ZecgAy' @ 348 : 1
-2026/07/21-16:19:42.636 9d70 Compacting 1@0 + 1@1 files
-2026/07/21-16:19:42.672 9d70 Generated table #16@0: 53 keys, 24934 bytes
-2026/07/21-16:19:42.672 9d70 Compacted 1@0 + 1@1 files => 24934 bytes
-2026/07/21-16:19:42.758 9d70 compacted to: files[ 0 1 0 0 0 0 0 ]
-2026/07/21-16:19:42.758 9d70 Delete type=2 #11
-2026/07/21-16:19:42.758 9d70 Delete type=2 #15
-2026/07/21-16:19:42.758 9d70 Manual compaction at level-0 from '!cards.cards!Q1sFpa5AmQOCmqf2.zpNQzNQuu1ZecgAy' @ 348 : 1 .. '!cards.cards!Q1sFpa5AmQOCmqf2.zpNQzNQuu1ZecgAy' @ 0 : 0; will stop at (end)
+2026/07/21-21:22:18.155 844c Recovering log #14
+2026/07/21-21:22:18.444 844c Delete type=0 #14
+2026/07/21-21:22:18.444 844c Delete type=3 #12
+2026/07/21-21:22:18.488 9be0 Level-0 table #20: started
+2026/07/21-21:22:18.523 9be0 Level-0 table #20: 24939 bytes OK
+2026/07/21-21:22:18.587 9be0 Delete type=0 #18
+2026/07/21-21:22:18.587 9be0 Manual compaction at level-0 from '!cards!Q1sFpa5AmQOCmqf2' @ 72057594037927935 : 1 .. '!cards.cards!Q1sFpa5AmQOCmqf2.zpNQzNQuu1ZecgAy' @ 0 : 0; will stop at '!cards.cards!Q1sFpa5AmQOCmqf2.zpNQzNQuu1ZecgAy' @ 401 : 1
+2026/07/21-21:22:18.587 9be0 Compacting 1@0 + 1@1 files
+2026/07/21-21:22:18.633 9be0 Generated table #21@0: 53 keys, 24939 bytes
+2026/07/21-21:22:18.634 9be0 Compacted 1@0 + 1@1 files => 24939 bytes
+2026/07/21-21:22:18.697 9be0 compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/07/21-21:22:18.697 9be0 Delete type=2 #16
+2026/07/21-21:22:18.698 9be0 Delete type=2 #20
+2026/07/21-21:22:18.698 9be0 Manual compaction at level-0 from '!cards.cards!Q1sFpa5AmQOCmqf2.zpNQzNQuu1ZecgAy' @ 401 : 1 .. '!cards.cards!Q1sFpa5AmQOCmqf2.zpNQzNQuu1ZecgAy' @ 0 : 0; will stop at (end)

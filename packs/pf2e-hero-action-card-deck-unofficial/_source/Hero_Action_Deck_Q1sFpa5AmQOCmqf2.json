@@ -848,7 +848,7 @@
     {
       "faces": [
         {
-          "name": "",
+          "name": "Impossible Shot",
           "text": "<p>Play when making a ranged attack, either with a Strike or a spell.</p><hr /><p>If you're attempting a Strike, double the range increment of the weapon or unarmed attack. If you're Casting a Spell, increase the range of the spell by half.</p><p>@UUID[Compendium.pf2e.other-effects.Item.HgWSyf7jULisWIlG]{Effect: Impossible Shot}</p>",
           "img": "modules/pf2e-hero-deck-unofficial/assets/impossible_shot.webp"
         }
