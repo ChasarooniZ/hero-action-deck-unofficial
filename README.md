@@ -12,8 +12,9 @@
 
 Unofficial Implementation of Pf2e Hero Action Cards as a Deck for fvtt
 
-https://github.com/user-attachments/assets/778c3fbf-6c32-4f54-bb25-ab1e3ca1c0ae
+<img width="797" height="481" alt="image" src="https://github.com/user-attachments/assets/a6e208c4-138b-4f96-8499-4b8cc167582d" />
 
+https://github.com/user-attachments/assets/e18032d9-7e0e-4a16-9ec4-9f34f374e7e6
 
 Adds both a new Mini UI and some minor functionality as well as the cards. Also includes optional animations and sounds that can play based on what a player does to an individual `Hero Action`.
 
