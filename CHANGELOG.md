@@ -1,5 +1,10 @@
 ## Unreleased
 
+## 1.0.3
+
+- Adjusted position of the Dialog so it spawns above the Hero Deck UI as opposed to in the center of the screen
+- Fixed cutoff text on **Hasty Block** (🐛 @Nythz)
+
 ## 1.0.2
 
 - Fixed missing Assets from previous release (🐛 @Nythz)
