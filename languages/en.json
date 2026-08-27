@@ -42,7 +42,7 @@
     },
     "ui": {
       "hero-action-dialogue": {
-        "title": "Hero Point Card Actions - ({hpText})",
+        "title": "Hero Point Card Actions - (Hero Points {hpText})",
         "warning": "<b>Note:</b> {name} has no Hero Points",
         "buttons": {
           "play": "Play Card",
@@ -75,6 +75,16 @@
     "notifications": {
       "warning": {
         "not-enough-hp": "FYI your character {name} doesn't have enough Hero Points to use this action"
+      }
+    },
+    "cards": {
+      "deck-name": {
+        "hand": {
+          "group": "Hero Actions: Hand",
+          "solo": "Hero Actions: Hand ({name})"
+        },
+        "discard": "Hero Actions: Discard",
+        "deck": "Hero Actions: Deck"
       }
     }
   }
