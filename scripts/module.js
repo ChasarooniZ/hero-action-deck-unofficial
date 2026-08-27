@@ -3,6 +3,7 @@ import {
   createHeroActionDeck,
   createHeroActionDiscard,
   createHeroActionHand,
+  getHandID,
 } from "./helpers.js";
 import { registerSettings } from "./settings.js";
 import { setupHeroActionHUD } from "./ui.js";
@@ -18,10 +19,7 @@ Hooks.once("ready", async function () {
   ) {
     await createHeroActionDeck();
   }
-  if (
-    !game.settings.get(MODULE_ID, "deck.id.hand") ||
-    !game.cards.get(game.settings.get(MODULE_ID, "deck.id.hand"))
-  ) {
+  if (!getHandID() || !game.cards.get(getHandID())) {
     await createHeroActionHand();
   }
   if (
@@ -32,10 +30,9 @@ Hooks.once("ready", async function () {
   }
   Hooks.on("createCard", async (card) => {
     if (
-      [
-        game.settings.get(MODULE_ID, "deck.id.hand"),
-        game.settings.get(MODULE_ID, "deck.id.discard"),
-      ]?.includes(card?.parent?.id)
+      [getHandID(), game.settings.get(MODULE_ID, "deck.id.discard")]?.includes(
+        card?.parent?.id,
+      )
     ) {
       setTimeout(setupHeroActionHUD, 500);
     }

@@ -42,24 +42,40 @@ export async function getEnrichedCardData(cards) {
 export async function createHeroActionDeck() {
   const data = (await fromUuid(HERO_ACTION_DECK_UUID)).toObject();
   data.ownership.default = 3;
+  data.name = game.i18n.format(
+    "pf2e-hero-deck-unofficial.cards.deck-name.deck",
+  );
   const deck = await Cards.create(data);
   await game.settings.set(MODULE_ID, "deck.id.hero-actions", deck.id);
 }
 
 export async function createHeroActionHand() {
+  const mode = game.settings.get(MODULE_ID, "hand.mode");
+  if (mode === "solo" && game.user.isGM) return;
   const deck = await Cards.create({
-    name: "Hero Actions: Hand",
+    name: game.i18n.format(
+      `pf2e-hero-deck-unofficial.cards.deck-name.hand.${mode}`,
+      {
+        name: game.user.id,
+      },
+    ),
     type: "hand",
     ownership: {
       default: 3,
     },
   });
-  await game.settings.set(MODULE_ID, "deck.id.hand", deck.id);
+  if (mode === "group") {
+    await game.settings.set(MODULE_ID, "deck.id.hand", deck.id);
+  } else if (mode === "solo") {
+    const idMap = game.settings.get(MODULE_ID, "deck.id.hand-solo-map");
+    idMap[game.user.id] = deck.id;
+    await game.settings.set(MODULE_ID, "deck.id.hand-solo-map", idMap);
+  }
 }
 
 export async function createHeroActionDiscard() {
   const deck = await Cards.create({
-    name: "Hero Actions: Discard",
+    name: game.i18n.format("pf2e-hero-deck-unofficial.cards.deck-name.discard"),
     type: "pile",
     ownership: {
       default: 3,
@@ -70,12 +86,11 @@ export async function createHeroActionDiscard() {
 
 export function fillUpHand() {
   const hand = getHand();
-  const deck = getDeck();
   const max = game.settings.get(MODULE_ID, "hero-actions.max");
   const count = max - hand.cards.size;
 
   if (count > 0) {
-    drawCard(count, { heroActionDeck: hand, heroActionSource: deck });
+    drawCard(count);
   }
 }
 
@@ -123,7 +138,7 @@ async function reduceHeroPoints() {
   if (actor) {
     if (val > 0) {
       await actor.update({ "system.resources.heroPoints.value": val - 1 });
-    } else if (!isNaN(Number(val))) {
+    } else if (!Number.isNaN(Number(val))) {
       ui.notitifications.warn(
         game.i18n.format(
           "pf2e-hero-deck-unofficial.notifications.warning.not-enough-hp",
@@ -214,11 +229,22 @@ export function getActor() {
 }
 
 export function getHand() {
-  return game.cards.get(game.settings.get(MODULE_ID, "deck.id.hand"));
+  return game.cards.get(getHandID());
 }
 export function getDeck() {
   return game.cards.get(game.settings.get(MODULE_ID, "deck.id.hero-actions"));
 }
 export function getDiscard() {
   return game.cards.get(game.settings.get(MODULE_ID, "deck.id.discard"));
+}
+
+export function getHandID() {
+  const mode = game.settings.get(MODULE_ID, "hand.mode");
+  if (mode === "group") {
+    return game.settings.get(MODULE_ID, "deck.id.hand");
+  } else if (mode === "solo") {
+    return game.settings.get(MODULE_ID, "deck.id.hand-solo-map")?.[
+      game.user.id
+    ];
+  }
 }

@@ -15,18 +15,40 @@ export function registerSettings() {
     name: `${MODULE_ID}.module-settings.deck.id.hand.name`,
     hint: `${MODULE_ID}.module-settings.deck.id.hand.hint`,
     scope: "world",
-    config: true,
+    config: false,
     type: String,
     default: "",
+  });
+
+    game.settings.register(MODULE_ID, "deck.id.hand-solo-map", {
+    name: `${MODULE_ID}.module-settings.deck.id.hand-solo-map.name`,
+    hint: `${MODULE_ID}.module-settings.deck.id.hand-solo-map.hint`,
+    scope: "world",
+    config: false,
+    type: Object,
+    default: {},
   });
 
   game.settings.register(MODULE_ID, "deck.id.discard", {
     name: `${MODULE_ID}.module-settings.deck.id.discard.name`,
     hint: `${MODULE_ID}.module-settings.deck.id.discard.hint`,
     scope: "world",
-    config: true,
+    config: false,
     type: String,
     default: "",
+  });
+
+  game.settings.register(MODULE_ID, "hand.mode", {
+    name: `${MODULE_ID}.module-settings.hand.mode.name`,
+    hint: `${MODULE_ID}.module-settings.hand.mode.hint`,
+    scope: "world",
+    config: true,
+    type: String,
+    default: "group",
+    choices: {
+      group: `${MODULE_ID}.module-settings.hand.mode.choices.group`,
+      solo: `${MODULE_ID}.module-settings.hand.mode.choices.solo`,
+    },
   });
 
   game.settings.register(MODULE_ID, "hero-actions.max", {

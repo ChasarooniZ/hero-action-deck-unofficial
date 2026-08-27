@@ -136,7 +136,6 @@ async function cardAction(cardID) {
 }
 
 function getHeroPointArt(val, max) {
-  const empty = max - val;
-  const res = "".padStart(empty, "◇").padEnd(max, "◈");
+  const res = "".padStart(val, "✪").padEnd(max, "⨀");
   return res;
 }
