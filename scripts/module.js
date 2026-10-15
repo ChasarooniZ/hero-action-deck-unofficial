@@ -4,7 +4,7 @@ import {
   createHeroActionDiscard,
   createHeroActionHand,
 } from "./helpers.js";
-import { setupHeroicFatesHUD } from "./lib/adventures+.js";
+import { modifyVillainPoints, setupHeroicFatesHUD } from "./lib/adventures+.js";
 import { registerSettings } from "./settings.js";
 import { setupHeroActionHUD } from "./ui.js";
 
@@ -14,15 +14,15 @@ Hooks.once("init", async function () {
 
 Hooks.once("ready", async function () {
   if (game.settings.get(MODULE_ID, "adventures-plus.enabled")) {
-    if (game.user.isGM) {
-      socket.on(MODULE_ID, (event, data) => {
-        if (event === "modifyVillainPoints") {
-          const change = Number(data?.change);
-          if (!Number.isNaN(change)) {
-            modifyVillainPoints(change);
-          }
+    game.socket.on(`module.${MODULE_ID}`, ({ event, data }) => {
+      if (event === "modifyVillainPoints" && game.user.isGM) {
+        const change = Number(data?.change);
+        if (!Number.isNaN(change)) {
+          modifyVillainPoints(change);
         }
-      });
+      }
+    });
+    if (game.user.isGM) {
       Hooks.on("updateSetting", (setting) => {
         if (setting?.key === "pf2e-hero-deck-unofficial.villain-points") {
           setupHeroicFatesHUD();

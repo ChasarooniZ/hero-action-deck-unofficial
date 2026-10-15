@@ -61,14 +61,20 @@ export async function setupHeroicFatesHUD() {
       "aside#heroic-fates-hud div.fates i:not(.cantafford), aside#heroic-fates-hud div.fates span:not(.cantafford)",
     )
     .forEach((cardHTML) => {
-      cardHTML.addEventListener("click", (e) => {
+      cardHTML.addEventListener("click", async (e) => {
         const id = e?.target?.id;
         if (id) {
           const fate = (isGM ? VILLAIN_POINT_FATES : HERO_POINT_FATES)?.find(
             (f) => f.name === id,
           );
           //Replace Points spent
-          createFateChatMessage(fate, isGM, 3);
+          const pts = await pickPointsToSpend(fate, points);
+          if (isGM) {
+            modifyVillainPoints(-pts);
+          } else {
+            modifyHeroPoints(-pts);
+          }
+          createFateChatMessage(fate, isGM, pts);
         }
         // if (id) {
         //   cardAction(id);
@@ -84,6 +90,16 @@ export function modifyVillainPoints(change) {
   const newVal =
     change > 0 ? Math.min(p + change, max) : Math.max(p + change, 0);
   if (p !== newVal) game.settings.set(MODULE_ID, "villain-points", newVal);
+}
+
+function modifyHeroPoints(change) {
+  const p = game.user?.character?.system?.resources?.heroPoints?.value;
+  const newVal =
+    change > 0 ? Math.min(p + change, max) : Math.max(p + change, 0);
+  if (p !== newVal)
+    game.user?.character.update({
+      "system.resources.heroPoints.value": newVal,
+    });
 }
 
 function incrementVillainPoint() {
@@ -123,16 +139,7 @@ function getFatesOptions(isGM, points) {
       const tiers = f.tiers?.length
         ? `<ul><li>${f.tiers.map((t) => `<p style="${points < t.cost ? "text-decoration: line-through; opacity: 60%" : " "}"><b>${t.cost} ${isGM ? "Villain Point" : "Hero Point"}${t.cost > 1 ? "s" : ""}</b> ${t.text.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}</p>`).join("</li><li>")}</li></ul>`
         : "";
-      const tooltip = `<span style="${cantAfford ? "text-decoration: line-through; opacity: 60%" : " "}">
-        <h4>${f.icon.replaceAll("'", '"')} ${f.name}</h4>
-        <b>Trigger</b> ${f.trigger.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}<br>
-        <b>Cost</b> ${f.cost.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}
-        ${f.requirements ? `<br><b>Requirements</b> ${f.requirements.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}` : ""}
-        <hr>
-        ${f.intro.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}<br>
-        ${tiers}
-        ${f.special ? `<b>Special</b> ${f.special.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}` : ""}
-        </span>`;
+      const tooltip = getFateDescription(cantAfford, f, tiers);
 
       return f.icon.replace(
         "class='",
@@ -144,11 +151,29 @@ function getFatesOptions(isGM, points) {
   return fates;
 }
 
+function getFateDescription(cantAfford, fate, tiers) {
+  return `<span style="${cantAfford ? "text-decoration: line-through; opacity: 60%" : " "}">
+        <h4>${fate.icon.replaceAll("'", '"')} ${fate.name}</h4>
+        <b>Trigger</b> ${fate.trigger.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}<br>
+        <b>Cost</b> ${fate.cost.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}
+        ${fate.requirements ? `<br><b>Requirements</b> ${fate.requirements.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}` : ""}
+        <hr>
+        ${fate.intro.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}<br>
+        ${tiers}
+        ${fate.special ? `<b>Special</b> ${fate.special.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}` : ""}
+        </span>`;
+}
+
 function createFateChatMessage(fate, isGM, pointsSpent = 0) {
   const pointName = isGM ? "Villain Point" : "Hero Point";
 
   if (!isGM) {
-    socket.emit(MODULE_ID, "modifyVillainPoints", { change: 1 });
+    game.socket.emit(`module.${MODULE_ID}`, {
+      event: "modifyVillainPoints",
+      data: {
+        change: 1,
+      },
+    });
   }
 
   // Only show tiers whose cost is <= pointsSpent
@@ -176,6 +201,33 @@ function createFateChatMessage(fate, isGM, pointsSpent = 0) {
 
   ChatMessage.create({ content });
 }
+
+async function pickPointsToSpend(fate, points) {
+  const cost = Number(fate.cost.charAt(0));
+  if (!fate?.tiers?.length) {
+    return Number.isNaN(cost) ? cost : points;
+  } else {
+    if (fate?.tiers?.[0] === cost) {
+      return cost;
+    } else {
+      const pointName = game.user.isGM ? "Villain Point" : "Hero Point";
+      const tierData = fate?.tiers?.map((t) =>
+        `<label style="${points < t.cost ? "text-decoration: line-through; opacity: 60%" : " "}"><input type="radio" name="choice" value="${t.cost}" checked> <b>${t.cost} ${pointName}${t.cost > 1 ? "s" : ""}</b> ${t.text.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}</label>`.join(
+          "",
+        ),
+      );
+      const res = await foundry.applications.api.DialogV2.input({
+        window: { title: "Select Hero Points to use" },
+        content: getFateDescription(false, fate, tierData),
+        ok: {
+          label: "Submit Guess",
+        },
+      });
+      return res?.pts ?? cost;
+    }
+  }
+}
+
 const HERO_POINT_FATES = [
   {
     icon: "<i class='fa-solid fa-dice-d20'></i>",
