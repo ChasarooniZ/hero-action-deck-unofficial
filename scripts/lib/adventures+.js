@@ -58,7 +58,7 @@ export async function setupHeroicFatesHUD() {
 
   document
     .querySelectorAll(
-      "aside#heroic-fates-hud div.fates i:not(.disabled), aside#heroic-fates-hud div.fates span:not(.disabled)",
+      "aside#heroic-fates-hud div.fates i:not(.cantafford), aside#heroic-fates-hud div.fates span:not(.cantafford)",
     )
     .forEach((cardHTML) => {
       cardHTML.addEventListener("click", (e) => {
@@ -77,6 +77,13 @@ export async function setupHeroicFatesHUD() {
         // }
       });
     });
+}
+
+export function modifyVillainPoints(change) {
+  const p = game.settings.get(MODULE_ID, "villain-points");
+  const newVal =
+    change > 0 ? Math.min(p + change, max) : Math.max(p + change, 0);
+  if (p !== newVal) game.settings.set(MODULE_ID, "villain-points", newVal);
 }
 
 function incrementVillainPoint() {
@@ -112,11 +119,12 @@ const max = 3;
 function getFatesOptions(isGM, points) {
   const fates = (isGM ? VILLAIN_POINT_FATES : HERO_POINT_FATES)
     .map((f) => {
+      const cantAfford = points < Number(f.cost.charAt(0));
       const tiers = f.tiers?.length
         ? `<ul><li>${f.tiers.map((t) => `<p style="${points < t.cost ? "text-decoration: line-through; opacity: 60%" : " "}"><b>${t.cost} ${isGM ? "Villain Point" : "Hero Point"}${t.cost > 1 ? "s" : ""}</b> ${t.text.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}</p>`).join("</li><li>")}</li></ul>`
         : "";
-      const tooltip = `
-        <h4>${f.name}</h4>
+      const tooltip = `<span style="${cantAfford ? "text-decoration: line-through; opacity: 60%" : " "}">
+        <h4>${f.icon.replaceAll("'", '"')} ${f.name}</h4>
         <b>Trigger</b> ${f.trigger.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}<br>
         <b>Cost</b> ${f.cost.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}
         ${f.requirements ? `<br><b>Requirements</b> ${f.requirements.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}` : ""}
@@ -124,12 +132,11 @@ function getFatesOptions(isGM, points) {
         ${f.intro.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}<br>
         ${tiers}
         ${f.special ? `<b>Special</b> ${f.special.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}` : ""}
-        `;
+        </span>`;
 
-      const cantAfford = points < Number(f.cost.charAt(0));
       return f.icon.replace(
         "class='",
-        `data-tooltip='${tooltip}' id="${f.name}" style="${cantAfford ? "opacity: 60%" : ""}" class='${cantAfford ? "disabled" : ""}`,
+        `data-tooltip-direction="UP" data-tooltip='${tooltip}' id="${f.name}" style="${cantAfford ? "opacity: 60%" : ""}" class='fate-action ${cantAfford ? "cantafford " : ""}`,
       );
     })
     .join("");
@@ -141,7 +148,7 @@ function createFateChatMessage(fate, isGM, pointsSpent = 0) {
   const pointName = isGM ? "Villain Point" : "Hero Point";
 
   if (!isGM) {
-    incrementVillainPoint();
+    socket.emit(MODULE_ID, "modifyVillainPoints", { change: 1 });
   }
 
   // Only show tiers whose cost is <= pointsSpent
@@ -353,7 +360,7 @@ const VILLAIN_POINT_FATES = [
     special: "",
   },
   {
-    icon: "<i class='fa-solid fa-heart-crack'></i>",
+    icon: "<i class='fa-sharp fa-solid fa-tombstone'></i>",
     category: "Death",
     name: "Deny Death",
     trigger:
@@ -376,7 +383,7 @@ const VILLAIN_POINT_FATES = [
     special: "",
   },
   {
-    icon: "<i class='fa-solid fa-eye'></i>",
+    icon: "<i class='fa-solid fa-eyes'></i>",
     category: "Fate",
     name: "Eyes of Fate",
     trigger:
