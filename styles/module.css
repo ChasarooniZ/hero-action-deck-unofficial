@@ -36,3 +36,7 @@ aside#heroic-fates-hud {
     }
   }
 }
+
+.point-picker .window-content {
+  overflow: hidden auto;
+}

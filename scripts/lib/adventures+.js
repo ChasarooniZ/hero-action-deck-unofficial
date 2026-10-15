@@ -69,6 +69,7 @@ export async function setupHeroicFatesHUD() {
           );
           //Replace Points spent
           const pts = await pickPointsToSpend(fate, points);
+          if (Number.isNaN(pts)) return;
           if (isGM) {
             modifyVillainPoints(-pts);
           } else {
@@ -211,19 +212,32 @@ async function pickPointsToSpend(fate, points) {
       return cost;
     } else {
       const pointName = game.user.isGM ? "Villain Point" : "Hero Point";
-      const tierData = fate?.tiers?.map((t) =>
-        `<label style="${points < t.cost ? "text-decoration: line-through; opacity: 60%" : " "}"><input type="radio" name="choice" value="${t.cost}" checked> <b>${t.cost} ${pointName}${t.cost > 1 ? "s" : ""}</b> ${t.text.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}</label>`.join(
-          "",
-        ),
-      );
+      const tierData = fate?.tiers
+        ?.map(
+          (t, idx) =>
+            `<label style="${points < t.cost ? "text-decoration: line-through; opacity: 60%" : " "}"><input type="radio" name="pts" value="${t.cost}" ${idx === 0 ? "checked" : ""}> <b>${t.cost} ${pointName}${t.cost > 1 ? "s" : ""}</b> ${t.text?.replaceAll(/'/g, "&apos;")?.replaceAll(/"/g, "&quot;")}</label>`,
+        )
+        .join("");
       const res = await foundry.applications.api.DialogV2.input({
         window: { title: "Select Hero Points to use" },
+        classes: ["point-picker"],
+        position: {
+          height: "auto",
+          left:
+            document
+              .querySelector("aside#scene-controls")
+              ?.getBoundingClientRect()?.right + 10,
+          // top:
+          //   document
+          //     .querySelector("aside#heroic-fates-hud")
+          //     ?.getBoundingClientRect()?.top - 600,
+        },
         content: getFateDescription(false, fate, tierData),
         ok: {
           label: "Submit Guess",
         },
       });
-      return res?.pts ?? cost;
+      return Number(res?.pts);
     }
   }
 }
