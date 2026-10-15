@@ -1,4 +1,5 @@
-aside#hero-action-hand {
+aside#hero-action-hand,
+aside#heroic-fates-hud {
   div.hero-action-container {
     pointer-events: all;
     width: var(--hero-action-container-width);

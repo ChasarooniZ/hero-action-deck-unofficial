@@ -1,4 +1,4 @@
-import { MODULE_ID } from "../const.js";
+import { MODULE_ID, PX_PER_CARD } from "../const.js";
 
 export async function setupHeroicFatesHUD() {
   const existingElement = document.querySelector("aside#heroic-fates-hud");
@@ -12,11 +12,11 @@ export async function setupHeroicFatesHUD() {
     ? game.settings.get(MODULE_ID, "villain-points")
     : game.user?.character?.system?.resources?.heroPoints?.value;
 
-  let heroPointHTML = `<div class="flexcol hero-points">`;
-  for (const i = 0; i < points; i++) {
+  let heroPointHTML = `<div class="flexcol hero-points" style="flex-shrink: 0">`;
+  for (let i = 0; i < points; i++) {
     heroPointHTML += `<i class="fa-solid fa-circle-${isGM ? "v" : "h"}"></i>`;
   }
-  for (const i = 0; i < max - points; i++) {
+  for (let i = 0; i < max - points; i++) {
     heroPointHTML += `<i class="fa-regular fa-circle"></i>`;
   }
   heroPointHTML += `</div>`;
@@ -27,10 +27,12 @@ export async function setupHeroicFatesHUD() {
   playerlist.insertAdjacentHTML(
     "afterend",
     `<aside id="heroic-fates-hud" class="plain">
-    <div class="hero-action-container" style="--hero-action-container-width: ${max * PX_PER_CARD}px">
+    <div class="hero-action-container" style="flexrow; display:flex; --hero-action-container-width: ${120}px">
         ${heroPointHTML}
-        <div  class="flexrow">
-          ${content}
+        <div class="flexcol">
+            <div class="flexrow">
+                ${content}
+            </div>
         </div>
     </div>
 </aside>`,
@@ -41,6 +43,13 @@ export async function setupHeroicFatesHUD() {
     .forEach((cardHTML) => {
       cardHTML.addEventListener("click", (e) => {
         const id = e?.target?.id;
+        if (id) {
+          const fate = (isGM ? VILLAIN_POINT_FATES : HERO_POINT_FATES)?.find(
+            (f) => f.name === id,
+          );
+          //Replace Points spent
+          createFateChatMessage(fate, isGM, 3);
+        }
         // if (id) {
         //   cardAction(id);
         // } else {
@@ -56,7 +65,7 @@ function getFatesOptions(isGM, points) {
   const fates = (isGM ? VILLAIN_POINT_FATES : HERO_POINT_FATES)
     .map((f) => {
       const tiers = f.tiers?.length
-        ? `<ul><li>${f.tiers.map((t) => `<b style="${points >= t.cost ? "text-decoration: line-through;" : ""}">${t.cost}</b> ${t.text}<br>`).join("</li></li>")}</li></ul>`
+        ? `<ul><li>${f.tiers.map((t) => `<b style="${points < t.cost ? "text-decoration: line-through;" : " "}">${t.cost} ${isGM ? "Villain Point" : "Hero Point"}${t.cost > 1 ? "s" : ""}</b> ${t.text}`).join("</li><li>")}</li></ul>`
         : "";
       const tooltip = `
         <h4>${f.name}</h4>
@@ -70,16 +79,42 @@ function getFatesOptions(isGM, points) {
         `;
       return f.icon.replace(
         "class",
-        `data-tooltip="${tooltip}" id="${f.name}" class`,
+        `data-tooltip='${tooltip}' id="${f.name}" style="${points < Number(f.cost.charAt(0)) ? "opacity: 60%" : ""}" class`,
       );
     })
     .join("");
 
-  return `<div class="flexcol hero-points">
-        ${fates}
-    </div>`;
+  return fates;
 }
 
+function createFateChatMessage(fate, isGM, pointsSpent = 0) {
+  const pointName = isGM ? "Villain Point" : "Hero Point";
+
+  // Only show tiers whose cost is <= pointsSpent
+  const visibleTiers = fate.tiers?.filter((t) => t.cost <= pointsSpent) ?? [];
+
+  const tiers = visibleTiers.length
+    ? `<ul><li>${visibleTiers
+        .map(
+          (t) =>
+            `<b>${t.cost} ${pointName}${t.cost > 1 ? "s" : ""}</b> ${t.text}`,
+        )
+        .join("</li><li>")}</li></ul>`
+    : "";
+
+  const content = `
+    <h4>${fate.icon} ${fate.name}</h4>
+    <b>Trigger</b> ${fate.trigger}<br>
+    <b>Cost</b> ${fate.cost}
+    ${fate.requirements ? `<br><b>Requirements</b> ${fate.requirements}` : ""}
+    <hr>
+    ${fate.intro}<br>
+    ${tiers}
+    ${fate.special ? `<b>Special</b> ${fate.special}` : ""}
+  `;
+
+  ChatMessage.create({ content });
+}
 const HERO_POINT_FATES = [
   {
     icon: "<i class='fa-solid fa-dice-d20'></i>",
