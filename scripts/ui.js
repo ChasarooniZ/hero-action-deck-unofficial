@@ -19,15 +19,22 @@ export async function setupHeroActionHUD() {
     existingElement.remove();
   }
 
+  const heroPointHTML = `<div class="flexcol hero-points">
+                            <i class="fa-solid fa-circle-h"></i>
+                            <i class="fa-solid fa-circle-h"></i>
+                            <i class="fa-regular fa-circle"></i>
+                </div>`
+
   const playerlist = document.querySelector("aside#players");
   playerlist.insertAdjacentHTML(
     "afterend",
     `<aside id="hero-action-hand" class="plain">
     <div class="hero-action-container" style="--hero-action-container-width: ${max * PX_PER_CARD}px">
+        ${heroPointHTML}
         <div  class="flexrow">
-        ${content}
+          ${content}
+        </div>
     </div>
-</div>
 </aside>`,
   );
 

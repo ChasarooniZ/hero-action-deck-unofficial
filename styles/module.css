@@ -16,6 +16,10 @@ aside#hero-action-hand {
           box-shadow: 0px 0px 10px var(--color-shadow-highlight);
         }
       }
+      div.hero-points {
+        flex: 0;
+        gap: 6px;
+      }
     }
   }
 }

@@ -2,6 +2,22 @@ import { MODULE_ID } from "./const.js";
 import { setupHeroActionHUD } from "./ui.js";
 
 export function registerSettings() {
+  game.settings.register(MODULE_ID, "adventures-plus.enabled", {
+    name: `${MODULE_ID}.module-settings.adventures-plus.enabled.name`,
+    hint: `${MODULE_ID}.module-settings.adventures-plus.enabled.hint`,
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+  game.settings.register(MODULE_ID, "villain-points", {
+    name: `${MODULE_ID}.module-settings.villain-points.name`,
+    hint: `${MODULE_ID}.module-settings.villain-points.hint`,
+    scope: "world",
+    config: false,
+    type: Number,
+    default: 0,
+  });
   game.settings.register(MODULE_ID, "deck.id.hero-actions", {
     name: `${MODULE_ID}.module-settings.deck.id.hero-actions.name`,
     hint: `${MODULE_ID}.module-settings.deck.id.hero-actions.hint`,
