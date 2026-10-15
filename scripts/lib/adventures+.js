@@ -42,29 +42,17 @@ export async function setupHeroicFatesHUD() {
 
   hpHTML.addEventListener("click", (e) => {
     if (isGM) {
-      const p = game.settings.get(MODULE_ID, "villain-points");
-      if (p !== Math.min(p + 1, max))
-        game.settings.set(MODULE_ID, "villain-points", Math.min(p + 1, max));
+      incrementVillainPoint();
     } else {
-      const p = game.user?.character?.system?.resources?.heroPoints?.value;
-      if (p !== Math.min(p + 1, max))
-        game.user?.character.update({
-          "system.resources.heroPoints.value": Math.min(p + 1, max),
-        });
+      incrementHeroPoint();
     }
   });
 
   hpHTML.addEventListener("contextmenu", (e) => {
     if (isGM) {
-      const p = game.settings.get(MODULE_ID, "villain-points");
-      if (p !== Math.max(p - 1, 0))
-        game.settings.set(MODULE_ID, "villain-points", Math.max(p - 1, 0));
+      decrementVillainPoint();
     } else {
-      const p = game.user?.character?.system?.resources?.heroPoints?.value;
-      if (p !== Math.max(p - 1, 0))
-        game.user?.character.update({
-          "system.resources.heroPoints.value": Math.max(p - 1, 0),
-        });
+      decrementHeroPoint();
     }
   });
 
@@ -91,6 +79,34 @@ export async function setupHeroicFatesHUD() {
     });
 }
 
+function incrementVillainPoint() {
+  const p = game.settings.get(MODULE_ID, "villain-points");
+  if (p !== Math.min(p + 1, max))
+    game.settings.set(MODULE_ID, "villain-points", Math.min(p + 1, max));
+}
+
+function decrementVillainPoint() {
+  const p = game.settings.get(MODULE_ID, "villain-points");
+  if (p !== Math.max(p - 1, 0))
+    game.settings.set(MODULE_ID, "villain-points", Math.max(p - 1, 0));
+}
+
+function incrementHeroPoint() {
+  const p = game.user?.character?.system?.resources?.heroPoints?.value;
+  if (p !== Math.min(p + 1, max))
+    game.user?.character.update({
+      "system.resources.heroPoints.value": Math.min(p + 1, max),
+    });
+}
+
+function decrementHeroPoint() {
+  const p = game.user?.character?.system?.resources?.heroPoints?.value;
+  if (p !== Math.max(p - 1, 0))
+    game.user?.character.update({
+      "system.resources.heroPoints.value": Math.max(p - 1, 0),
+    });
+}
+
 const max = 3;
 
 function getFatesOptions(isGM, points) {
@@ -112,8 +128,8 @@ function getFatesOptions(isGM, points) {
 
       const cantAfford = points < Number(f.cost.charAt(0));
       return f.icon.replace(
-        'class="',
-        `data-tooltip='${tooltip}' id="${f.name}" style="${cantAfford ? "opacity: 60%" : ""}" class=\"${cantAfford ? "disabled" : ""}`,
+        "class='",
+        `data-tooltip='${tooltip}' id="${f.name}" style="${cantAfford ? "opacity: 60%" : ""}" class='${cantAfford ? "disabled" : ""}`,
       );
     })
     .join("");
@@ -123,6 +139,10 @@ function getFatesOptions(isGM, points) {
 
 function createFateChatMessage(fate, isGM, pointsSpent = 0) {
   const pointName = isGM ? "Villain Point" : "Hero Point";
+
+  if (!isGM) {
+    incrementVillainPoint();
+  }
 
   // Only show tiers whose cost is <= pointsSpent
   const visibleTiers = fate.tiers?.filter((t) => t.cost <= pointsSpent) ?? [];
