@@ -14,6 +14,22 @@ Hooks.once("init", async function () {
 
 Hooks.once("ready", async function () {
   if (game.settings.get(MODULE_ID, "adventures-plus.enabled")) {
+    if (game.user.isGM) {
+      Hooks.on("updateSetting", (setting) => {
+        if (setting?.key === "pf2e-hero-deck-unofficial.villain-points") {
+          setupHeroicFatesHUD();
+        }
+      });
+    } else {
+      Hooks.on("updateActor", (char, update) => {
+        if (
+          char?.uuid === game.user?.character?.uuid &&
+          update?.system?.resources?.heroPoints?.value !== "undefined"
+        ) {
+          setupHeroicFatesHUD();
+        }
+      });
+    }
     setupHeroicFatesHUD();
   } else {
     if (

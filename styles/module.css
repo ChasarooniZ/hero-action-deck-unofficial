@@ -20,6 +20,8 @@ aside#heroic-fates-hud {
       div.hero-points {
         flex: 0;
         gap: 6px;
+        border-right: solid 1px;
+        padding-right: 0.4em;
       }
     }
   }

@@ -38,6 +38,36 @@ export async function setupHeroicFatesHUD() {
 </aside>`,
   );
 
+  const hpHTML = document.querySelector("div.hero-points");
+
+  hpHTML.addEventListener("click", (e) => {
+    if (isGM) {
+      const p = game.settings.get(MODULE_ID, "villain-points");
+      if (p !== Math.min(p + 1, max))
+        game.settings.set(MODULE_ID, "villain-points", Math.min(p + 1, max));
+    } else {
+      const p = game.user?.character?.system?.resources?.heroPoints?.value;
+      if (p !== Math.min(p + 1, max))
+        game.user?.character.update({
+          "system.resources.heroPoints.value": Math.min(p + 1, max),
+        });
+    }
+  });
+
+  hpHTML.addEventListener("contextmenu", (e) => {
+    if (isGM) {
+      const p = game.settings.get(MODULE_ID, "villain-points");
+      if (p !== Math.max(p - 1, 0))
+        game.settings.set(MODULE_ID, "villain-points", Math.max(p - 1, 0));
+    } else {
+      const p = game.user?.character?.system?.resources?.heroPoints?.value;
+      if (p !== Math.max(p - 1, 0))
+        game.user?.character.update({
+          "system.resources.heroPoints.value": Math.max(p - 1, 0),
+        });
+    }
+  });
+
   document
     .querySelectorAll("aside#heroic-fates-hud i#fate")
     .forEach((cardHTML) => {
@@ -65,7 +95,7 @@ function getFatesOptions(isGM, points) {
   const fates = (isGM ? VILLAIN_POINT_FATES : HERO_POINT_FATES)
     .map((f) => {
       const tiers = f.tiers?.length
-        ? `<ul><li>${f.tiers.map((t) => `<b style="${points < t.cost ? "text-decoration: line-through;" : " "}">${t.cost} ${isGM ? "Villain Point" : "Hero Point"}${t.cost > 1 ? "s" : ""}</b> ${t.text}`).join("</li><li>")}</li></ul>`
+        ? `<ul><li>${f.tiers.map((t) => `<p style="${points < t.cost ? "text-decoration: line-through; opacity: 60%" : " "}"><b>${t.cost} ${isGM ? "Villain Point" : "Hero Point"}${t.cost > 1 ? "s" : ""}</b> ${t.text}</p>`).join("</li><li>")}</li></ul>`
         : "";
       const tooltip = `
         <h4>${f.name}</h4>
