@@ -1,4 +1,4 @@
-import { MODULE_ID, PX_PER_CARD } from "../const.js";
+import { MODULE_ID, PX_PER_CARD, SFX } from "../const.js";
 
 export async function setupHeroicFatesHUD() {
   const existingElement = document.querySelector("aside#heroic-fates-hud");
@@ -72,8 +72,16 @@ export async function setupHeroicFatesHUD() {
           if (Number.isNaN(pts)) return;
           if (isGM) {
             modifyVillainPoints(-pts);
+            new Sequence()
+              .sound()
+              .file(Sequencer.Helpers.random_object_element(SFX.VILLAIN_PLAY))
+              .play({ preload: true });
           } else {
             modifyHeroPoints(-pts);
+            new Sequence()
+              .sound()
+              .file(Sequencer.Helpers.random_object_element(SFX.PLAY))
+              .play({ preload: true });
           }
           createFateChatMessage(fate, isGM, pts);
         }
@@ -234,7 +242,7 @@ async function pickPointsToSpend(fate, points) {
         },
         content: getFateDescription(false, fate, tierData),
         ok: {
-          label: "Submit Guess",
+          label: "Select Hero Points to Use",
         },
       });
       return Number(res?.pts);

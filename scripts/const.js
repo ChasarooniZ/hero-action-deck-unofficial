@@ -36,5 +36,10 @@ export const SFX = {
     `modules/${MODULE_ID}/assets/sfx/FX Discard 003.ogg`,
     `modules/${MODULE_ID}/assets/sfx/FX Discard 004.ogg`,
   ],
+  VILLAIN_PLAY: [
+    `modules/${MODULE_ID}/assets/sfx/Synth Swell A.ogg`,
+    `modules/${MODULE_ID}/assets/sfx/Synth Swell B.ogg`,
+    `modules/${MODULE_ID}/assets/sfx/Synth Swell C.ogg`,
+  ],
 };export const PX_PER_CARD = 60;
 
