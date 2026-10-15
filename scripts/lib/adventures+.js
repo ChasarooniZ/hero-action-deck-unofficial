@@ -12,7 +12,7 @@ export async function setupHeroicFatesHUD() {
     ? game.settings.get(MODULE_ID, "villain-points")
     : game.user?.character?.system?.resources?.heroPoints?.value;
 
-  let heroPointHTML = `<div class="flexcol hero-points" style="flex-shrink: 0">`;
+  let heroPointHTML = `<div class="flexcol hero-points" style="flex-shrink: 0" data-tooltip="<p><b>Add Point</b> <span class='reference'>Click</span></p><p><b>Remove Point</b> <span class='reference'>Right Click</span></p>">`;
   for (let i = 0; i < points; i++) {
     heroPointHTML += `<i class="fa-solid fa-circle-${isGM ? "v" : "h"}"></i>`;
   }
@@ -30,7 +30,7 @@ export async function setupHeroicFatesHUD() {
     <div class="hero-action-container" style="flexrow; display:flex; --hero-action-container-width: ${120}px">
         ${heroPointHTML}
         <div class="flexcol">
-            <div class="flexrow">
+            <div class="flexrow fates">
                 ${content}
             </div>
         </div>
@@ -69,7 +69,9 @@ export async function setupHeroicFatesHUD() {
   });
 
   document
-    .querySelectorAll("aside#heroic-fates-hud i#fate")
+    .querySelectorAll(
+      "aside#heroic-fates-hud div.fates i:not(.disabled), aside#heroic-fates-hud div.fates span:not(.disabled)",
+    )
     .forEach((cardHTML) => {
       cardHTML.addEventListener("click", (e) => {
         const id = e?.target?.id;
@@ -95,21 +97,23 @@ function getFatesOptions(isGM, points) {
   const fates = (isGM ? VILLAIN_POINT_FATES : HERO_POINT_FATES)
     .map((f) => {
       const tiers = f.tiers?.length
-        ? `<ul><li>${f.tiers.map((t) => `<p style="${points < t.cost ? "text-decoration: line-through; opacity: 60%" : " "}"><b>${t.cost} ${isGM ? "Villain Point" : "Hero Point"}${t.cost > 1 ? "s" : ""}</b> ${t.text}</p>`).join("</li><li>")}</li></ul>`
+        ? `<ul><li>${f.tiers.map((t) => `<p style="${points < t.cost ? "text-decoration: line-through; opacity: 60%" : " "}"><b>${t.cost} ${isGM ? "Villain Point" : "Hero Point"}${t.cost > 1 ? "s" : ""}</b> ${t.text.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}</p>`).join("</li><li>")}</li></ul>`
         : "";
       const tooltip = `
         <h4>${f.name}</h4>
-        <b>Trigger</b> ${f.trigger}<br>
-        <b>Cost</b> ${f.cost}
-        ${f.requirements ? `<br><b>Requirements</b> ${f.requirements}` : ""}
+        <b>Trigger</b> ${f.trigger.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}<br>
+        <b>Cost</b> ${f.cost.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}
+        ${f.requirements ? `<br><b>Requirements</b> ${f.requirements.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}` : ""}
         <hr>
-        ${f.intro}<br>
+        ${f.intro.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}<br>
         ${tiers}
-        ${f.special ? `<b>Special</b> ${f.special}` : ""}
+        ${f.special ? `<b>Special</b> ${f.special.replaceAll(/'/g, "&apos;").replaceAll(/"/g, "&quot;")}` : ""}
         `;
+
+      const cantAfford = points < Number(f.cost.charAt(0));
       return f.icon.replace(
-        "class",
-        `data-tooltip='${tooltip}' id="${f.name}" style="${points < Number(f.cost.charAt(0)) ? "opacity: 60%" : ""}" class`,
+        'class="',
+        `data-tooltip='${tooltip}' id="${f.name}" style="${cantAfford ? "opacity: 60%" : ""}" class=\"${cantAfford ? "disabled" : ""}`,
       );
     })
     .join("");
